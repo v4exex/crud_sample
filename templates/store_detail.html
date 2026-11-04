@@ -124,15 +124,72 @@
             border: 1px solid var(--line);
             border-radius: 18px;
         }
-        .score {
+        .stars {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            letter-spacing: 1px;
+            color: rgba(128, 128, 140, 0.35);
+            line-height: 1;
+        }
+        .stars .on { color: #ffb400; }
+        .stars-partial {
+            position: relative;
             display: inline-block;
-            padding: 4px 10px;
+            margin-top: 8px;
+            font-size: 20px;
+            line-height: 1;
+            white-space: nowrap;
+        }
+        .star {
+            position: relative;
+            display: inline-block;
+            margin-right: 2px;
+            color: rgba(128, 128, 140, 0.35);
+        }
+        .star-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            color: #ffb400;
+        }
+        .score {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             margin-bottom: 10px;
-            border-radius: 999px;
-            background: var(--accent-soft);
-            color: var(--accent);
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 700;
+        }
+        .score .stars { font-size: 16px; }
+        .empty {
+            padding: 48px 20px;
+            text-align: center;
+            background: var(--card);
+            border: 1px dashed var(--line);
+            border-radius: 18px;
+        }
+        .empty-icon {
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--accent-soft);
+            font-size: 22px;
+        }
+        .empty-title {
+            margin: 0 0 4px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .empty-desc {
+            margin: 0;
+            font-size: 14px;
+            color: var(--muted);
         }
         .comment {
             margin: 0;
@@ -151,6 +208,12 @@
             <div class="stat">
                 <div class="label">리뷰점수</div>
                 <div class="value accent">{{ avg_score }}</div>
+                <div class="stars-partial">
+                    {% for i in range(5) %}
+                    {% set fill = [[avg_score - i, 0]|max, 1]|min * 100 %}
+                    <span class="star">★<span class="star-fill" style="width: {{ fill }}%;">★</span></span>
+                    {% endfor %}
+                </div>
             </div>
             <div class="stat">
                 <div class="label">리뷰개수</div>
@@ -160,13 +223,22 @@
 
         <div class="section-head">
             <h2>사용자리뷰</h2>
-            <a class="write-btn" href="/stores/{{ food_store.id }}/reviews/new">리뷰쓰기</a>
+            <a class="write-btn" href="/stores/{{ food_store.id }}/review/new">리뷰쓰기</a>
         </div>
         <div class="reviews">
             {% for review in food_store.review_list %}
             <div class="review">
-                <span class="score">평점 {{ review.score }}</span>
+                <div class="score">
+                    <span class="stars">{% for i in range(5) %}<span class="{{ 'on' if i < review.score else '' }}">★</span>{% endfor %}</span>
+                    <span>{{ review.score }}</span>
+                </div>
                 <p class="comment">{{ review.comment }}</p>
+            </div>
+            {% else %}
+            <div class="empty">
+                <div class="empty-icon">💬</div>
+                <p class="empty-title">아직 리뷰가 없습니다</p>
+                <p class="empty-desc">첫 번째 리뷰를 남겨 보세요.</p>
             </div>
             {% endfor %}
         </div>

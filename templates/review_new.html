@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>리뷰쓰기</h1>
+    <form action="/stores/{{ store_id }}/review/create" method="post">
+    평점<input type="number" min="0" max="5" name="score" />
+    리뷰<input type="text" name="comment" />
+    <input type="submit" />
+    </form>
+</body>
+</html>

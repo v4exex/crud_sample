@@ -46,9 +46,9 @@ def store_list(request:Request):
 
 @app.get('/stores/{store_id}')
 def store_detail(request:Request, store_id: int):
-    food_store = next((food_store for food_store in food_store_list if food_store['id'] == store_id), None)
+    food_store = find_food_store_by_id(store_id)
     review_count = len(food_store['review_list'])
-    avg_score = sum([review['score'] for review in food_store['review_list']]) / review_count
+    avg_score = 0 if review_count == 0 else round(sum([review['score'] for review in food_store['review_list']]) / review_count, 1)
     
     return templates.TemplateResponse(
         request=request,
@@ -59,3 +59,23 @@ def store_detail(request:Request, store_id: int):
             'review_count': review_count,
         }
     )
+
+@app.get('/stores/{store_id}/review/new')
+def review_new(request:Request, store_id: int):
+    return templates.TemplateResponse(
+        request=request,
+        name='review_new.html',
+        context={ 'store_id': store_id }
+    )    
+
+@app.post('/stores/{store_id}/review/create')
+def review_new(store_id: int, score: int = Form(), comment: str = Form()):
+    food_store = find_food_store_by_id(store_id)
+    food_store['review_list'].append({
+        'score': score,
+        'comment': comment,
+    })
+    return RedirectResponse(f'/stores/{store_id}', status_code=303)
+
+def find_food_store_by_id(store_id: int):
+    return next((food_store for food_store in food_store_list if food_store['id'] == store_id), None)
