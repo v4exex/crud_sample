@@ -82,8 +82,7 @@ def review_create(store_id: int, score: int = Form(), comment: str = Form()):
 
 @app.get('/stores/{store_id}/review/{review_id}/edit')
 def review_edit(request:Request, store_id: int, review_id: int):
-    food_store = find_food_store_by_id(store_id)
-    review = find_review_by_id(review_id, food_store['review_list'])
+    review = find_review_by_id(review_id, store_id)
     
     return templates.TemplateResponse(
         request=request,
@@ -97,8 +96,7 @@ def review_edit(request:Request, store_id: int, review_id: int):
 
 @app.post('/stores/{store_id}/review/{review_id}/update')
 def review_update(store_id: int, review_id: int, score: int = Form(), comment: str = Form()):
-    food_store = find_food_store_by_id(store_id)
-    review = find_review_by_id(review_id, food_store['review_list'])
+    review = find_review_by_id(review_id, store_id)
     review['score'] = score
     review['comment'] = comment
     return RedirectResponse(f'/stores/{store_id}', status_code=303)
@@ -106,15 +104,16 @@ def review_update(store_id: int, review_id: int, score: int = Form(), comment: s
 @app.get('/stores/{store_id}/review/{review_id}/delete')
 def review_delete(store_id: int, review_id: int):
     food_store = find_food_store_by_id(store_id)
-    find_review = find_review_by_id(review_id, food_store['review_list'])
+    find_review = find_review_by_id(review_id, store_id)
     food_store['review_list'] = [review for review in food_store['review_list'] if review['review_id'] != find_review['review_id']]
     return RedirectResponse(f'/stores/{store_id}', status_code=303)
 
 def find_food_store_by_id(store_id: int):
     return next((food_store for food_store in food_store_list if food_store['id'] == store_id), None)
 
-def find_review_by_id(review_id: int, review_list: list):
-    return next((review for review in review_list if review['review_id'] == review_id), None)
+def find_review_by_id(review_id: int, store_id: int):
+    food_store = find_food_store_by_id(store_id)
+    return next((review for review in food_store['review_list'] if review['review_id'] == review_id), None)
 
 def get_new_review_id(review_list):
     return max([review['review_id'] for review in review_list], default=0) + 1
