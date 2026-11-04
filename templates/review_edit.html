@@ -3,87 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>리뷰쓰기</title>
+    <title>리뷰 수정하기</title>
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
     <style>
         :root {
-            --bg: #fafafa;
-            --card: #ffffff;
-            --text: #111111;
-            --muted: #8b8b94;
-            --line: rgba(0, 0, 0, 0.1);
-            --accent: #5b5bf0;
-            --accent-soft: rgba(91, 91, 240, 0.15);
+            --bg: #07070d;
+            --text: #f5f5fa;
+            --muted: #9a9ab0;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-hi: rgba(255, 255, 255, 0.09);
+            --line: rgba(255, 255, 255, 0.1);
+            --a1: #7c5cff;
+            --a2: #ff5ca8;
+            --grad: linear-gradient(135deg, var(--a1), var(--a2));
+            --gold: #ffc94d;
+            --star-off: rgba(255, 255, 255, 0.14);
+            --orb: 0.5;
         }
-        @media (prefers-color-scheme: dark) {
+        @media (prefers-color-scheme: light) {
             :root {
-                --bg: #0b0b0d;
-                --card: #151518;
-                --text: #f4f4f5;
-                --muted: #7c7c86;
-                --line: rgba(255, 255, 255, 0.12);
-                --accent: #8b8bff;
-                --accent-soft: rgba(139, 139, 255, 0.2);
+                --bg: #f6f4ff;
+                --text: #14121f;
+                --muted: #6b6880;
+                --glass: rgba(255, 255, 255, 0.65);
+                --glass-hi: rgba(255, 255, 255, 0.95);
+                --line: rgba(20, 18, 31, 0.1);
+                --star-off: rgba(20, 18, 31, 0.12);
+                --orb: 0.32;
             }
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
             min-height: 100vh;
-            padding: 72px 20px;
+            padding: 72px 20px 96px;
             background: var(--bg);
             color: var(--text);
             font-family: Pretendard, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
-        .container {
-            max-width: 520px;
-            margin: 0 auto;
+        body::before, body::after {
+            content: "";
+            position: fixed;
+            z-index: -1;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: var(--orb);
+            pointer-events: none;
         }
+        body::before {
+            width: 520px; height: 520px;
+            top: -160px; left: -120px;
+            background: var(--a1);
+            animation: drift 16s ease-in-out infinite alternate;
+        }
+        body::after {
+            width: 480px; height: 480px;
+            bottom: -160px; right: -120px;
+            background: var(--a2);
+            animation: drift 20s ease-in-out infinite alternate-reverse;
+        }
+        @keyframes drift { to { transform: translate(60px, 40px) scale(1.15); } }
+        @media (prefers-reduced-motion: reduce) {
+            body::before, body::after { animation: none; }
+        }
+        .container { max-width: 560px; margin: 0 auto; }
         .eyebrow {
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            color: var(--accent);
-            margin-bottom: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            margin-bottom: 18px;
+            border-radius: 999px;
+            background: var(--glass);
+            border: 1px solid var(--line);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            color: var(--muted);
+        }
+        .eyebrow::before {
+            content: "";
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--grad);
+            box-shadow: 0 0 10px var(--a2);
         }
         h1 {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            margin: 0 0 28px;
+            margin: 0 0 30px;
+            font-size: clamp(40px, 10vw, 60px);
+            font-weight: 900;
+            letter-spacing: -0.045em;
+            line-height: 1.05;
+            background: linear-gradient(135deg, var(--text) 30%, var(--a1) 70%, var(--a2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
         form {
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            padding: 28px 24px;
-            background: var(--card);
+            gap: 26px;
+            padding: 32px 28px;
+            background: var(--glass);
             border: 1px solid var(--line);
-            border-radius: 22px;
+            border-radius: 32px;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow: 0 30px 80px -40px rgba(124, 92, 255, 0.5);
         }
         label {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
         }
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .field-label {
-            font-size: 14px;
-            font-weight: 600;
-        }
+        .field { display: flex; flex-direction: column; gap: 10px; }
+        .field-label { font-size: 14px; font-weight: 700; }
         .star-rating {
             display: inline-flex;
             flex-direction: row-reverse;
             justify-content: flex-end;
-            gap: 4px;
+            gap: 6px;
         }
         .star-rating input {
             position: absolute;
@@ -94,68 +138,77 @@
         }
         .star-rating label {
             display: block;
-            font-size: 40px;
+            font-size: 46px;
             line-height: 1;
-            color: rgba(128, 128, 140, 0.35);
+            color: var(--star-off);
             cursor: pointer;
-            transition: color 0.15s ease, transform 0.15s ease;
+            transition: color 0.15s ease, transform 0.2s ease, text-shadow 0.2s ease;
         }
-        .star-rating label:hover { transform: scale(1.12); }
+        .star-rating label:hover { transform: scale(1.18) rotate(-6deg); }
         .star-rating input:checked ~ label,
         .star-rating label:hover,
-        .star-rating label:hover ~ label { color: #ffb400; }
+        .star-rating label:hover ~ label {
+            color: var(--gold);
+            text-shadow: 0 0 22px rgba(255, 201, 77, 0.6);
+        }
         .star-rating input:focus-visible + label {
-            outline: 2px solid var(--accent);
+            outline: 2px solid var(--a1);
             outline-offset: 4px;
-            border-radius: 6px;
+            border-radius: 8px;
         }
         input[type="text"] {
             width: 100%;
-            padding: 14px 16px;
-            background: var(--bg);
+            padding: 16px 18px;
+            background: var(--glass);
             border: 1px solid var(--line);
-            border-radius: 14px;
+            border-radius: 16px;
             color: var(--text);
             font-family: inherit;
             font-size: 16px;
+            font-weight: 500;
             outline: none;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
         }
-        input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px var(--accent-soft);
+        input[type="text"]::placeholder { color: var(--muted); }
+        input[type="text"]:focus {
+            background: var(--glass-hi);
+            border-color: var(--a1);
+            box-shadow: 0 0 0 4px rgba(124, 92, 255, 0.22);
         }
         input[type="submit"] {
             margin-top: 4px;
-            padding: 15px 16px;
+            padding: 17px 16px;
             border: none;
-            border-radius: 14px;
-            background: var(--accent);
+            border-radius: 16px;
+            background: var(--grad);
             color: #fff;
             font-family: inherit;
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 800;
+            letter-spacing: -0.01em;
             cursor: pointer;
-            box-shadow: 0 10px 24px -10px var(--accent);
+            box-shadow: 0 14px 34px -12px var(--a1), 0 0 0 1px rgba(255, 255, 255, 0.14) inset;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         input[type="submit"]:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 14px 28px -10px var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 44px -12px var(--a2), 0 0 0 1px rgba(255, 255, 255, 0.22) inset;
         }
         .back {
             display: inline-block;
-            margin-top: 20px;
+            margin-top: 24px;
             font-size: 14px;
+            font-weight: 600;
             color: var(--muted);
             text-decoration: none;
+            transition: color 0.2s ease, transform 0.2s ease;
         }
-        .back:hover { color: var(--accent); }
+        .back:hover { color: var(--text); transform: translateX(-3px); }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="eyebrow">NEW REVIEW</div>
+        <div class="eyebrow">EDIT REVIEW</div>
         <h1>리뷰 수정하기</h1>
         <form action="/stores/{{ store_id }}/review/{{ review_id }}/update" method="post">
             <div class="field">
@@ -165,7 +218,8 @@
                     <input type="radio" name="score" id="score4" value="4" {{ 'checked' if review.score == 4 }} /><label for="score4" title="4점">★</label>
                     <input type="radio" name="score" id="score3" value="3" {{ 'checked' if review.score == 3 }} /><label for="score3" title="3점">★</label>
                     <input type="radio" name="score" id="score2" value="2" {{ 'checked' if review.score == 2 }} /><label for="score2" title="2점">★</label>
-                    <input type="radio" name="score" id="score1" value="1" {{ 'checked' if review.score == 1 }} /><label for="score1" title="1점">★</label>                </div>
+                    <input type="radio" name="score" id="score1" value="1" {{ 'checked' if review.score == 1 }} /><label for="score1" title="1점">★</label>
+                </div>
             </div>
             <label>
                 리뷰

@@ -8,97 +8,173 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
     <style>
         :root {
-            --bg: #fafafa;
-            --card: #ffffff;
-            --text: #111111;
-            --muted: #8b8b94;
-            --line: rgba(0, 0, 0, 0.06);
-            --accent: #5b5bf0;
+            --bg: #07070d;
+            --text: #f5f5fa;
+            --muted: #9a9ab0;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-hi: rgba(255, 255, 255, 0.09);
+            --line: rgba(255, 255, 255, 0.1);
+            --a1: #7c5cff;
+            --a2: #ff5ca8;
+            --a3: #22d3ee;
+            --grad: linear-gradient(135deg, var(--a1), var(--a2));
+            --orb: 0.5;
         }
-        @media (prefers-color-scheme: dark) {
+        @media (prefers-color-scheme: light) {
             :root {
-                --bg: #0b0b0d;
-                --card: #151518;
-                --text: #f4f4f5;
-                --muted: #7c7c86;
-                --line: rgba(255, 255, 255, 0.08);
-                --accent: #8b8bff;
+                --bg: #f6f4ff;
+                --text: #14121f;
+                --muted: #6b6880;
+                --glass: rgba(255, 255, 255, 0.65);
+                --glass-hi: rgba(255, 255, 255, 0.95);
+                --line: rgba(20, 18, 31, 0.08);
+                --orb: 0.32;
             }
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
             min-height: 100vh;
-            padding: 72px 20px;
+            padding: 72px 20px 96px;
             background: var(--bg);
             color: var(--text);
             font-family: Pretendard, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
-        .container {
-            max-width: 520px;
-            margin: 0 auto;
+        body::before, body::after {
+            content: "";
+            position: fixed;
+            z-index: -1;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: var(--orb);
+            pointer-events: none;
         }
-        header { margin-bottom: 32px; }
+        body::before {
+            width: 520px; height: 520px;
+            top: -160px; left: -120px;
+            background: var(--a1);
+            animation: drift 16s ease-in-out infinite alternate;
+        }
+        body::after {
+            width: 480px; height: 480px;
+            bottom: -160px; right: -120px;
+            background: var(--a2);
+            animation: drift 20s ease-in-out infinite alternate-reverse;
+        }
+        @keyframes drift { to { transform: translate(60px, 40px) scale(1.15); } }
+        @media (prefers-reduced-motion: reduce) {
+            body::before, body::after { animation: none; }
+        }
+        .container { max-width: 560px; margin: 0 auto; }
+        header { margin-bottom: 36px; }
         .eyebrow {
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            color: var(--accent);
-            margin-bottom: 8px;
-        }
-        h1 {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            margin: 0;
-        }
-        .count {
-            margin-top: 8px;
-            font-size: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            margin-bottom: 18px;
+            border-radius: 999px;
+            background: var(--glass);
+            border: 1px solid var(--line);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
             color: var(--muted);
         }
+        .eyebrow::before {
+            content: "";
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--grad);
+            box-shadow: 0 0 10px var(--a2);
+        }
+        h1 {
+            margin: 0 0 14px;
+            font-size: clamp(40px, 10vw, 60px);
+            font-weight: 900;
+            letter-spacing: -0.045em;
+            line-height: 1.05;
+            background: linear-gradient(135deg, var(--text) 30%, var(--a1) 70%, var(--a2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .count { font-size: 16px; color: var(--muted); }
+        .count b { color: var(--text); font-weight: 700; }
         ul {
             list-style: none;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
+            counter-reset: n;
         }
         li a {
+            counter-increment: n;
+            position: relative;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 20px 22px;
-            background: var(--card);
+            gap: 18px;
+            padding: 22px 22px;
+            background: var(--glass);
             border: 1px solid var(--line);
-            border-radius: 18px;
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             color: inherit;
             text-decoration: none;
-            font-size: 17px;
-            font-weight: 600;
-            letter-spacing: -0.01em;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+        li a::before {
+            content: counter(n, decimal-leading-zero);
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
         li a::after {
             content: "→";
+            margin-left: auto;
+            width: 38px; height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid var(--line);
             color: var(--muted);
-            transition: transform 0.2s ease, color 0.2s ease;
+            font-weight: 500;
+            transition: all 0.25s ease;
         }
         li a:hover {
-            transform: translateY(-2px);
-            border-color: var(--accent);
-            box-shadow: 0 10px 30px -12px rgba(91, 91, 240, 0.35);
+            transform: translateY(-4px);
+            background: var(--glass-hi);
+            border-color: rgba(124, 92, 255, 0.5);
+            box-shadow: 0 20px 50px -20px rgba(124, 92, 255, 0.55), 0 0 0 1px rgba(255, 92, 168, 0.15);
         }
         li a:hover::after {
-            color: var(--accent);
-            transform: translateX(4px);
+            background: var(--grad);
+            border-color: transparent;
+            color: #fff;
+            transform: rotate(-45deg);
         }
-        .empty {
-            padding: 40px 0;
+        li.empty {
+            padding: 56px 20px;
             text-align: center;
             color: var(--muted);
+            background: var(--glass);
+            border: 1px dashed var(--line);
+            border-radius: 24px;
         }
     </style>
 </head>
@@ -107,7 +183,7 @@
         <header>
             <div class="eyebrow">RESTAURANTS</div>
             <h1>음식점 리스트</h1>
-            <div class="count">총 {{ food_store_list|length }}곳</div>
+            <div class="count">총 <b>{{ food_store_list|length }}</b>곳</div>
         </header>
         <ul>
             {% for food_store in food_store_list %}
