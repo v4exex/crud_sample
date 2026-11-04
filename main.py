@@ -104,8 +104,7 @@ def review_update(store_id: int, review_id: int, score: int = Form(), comment: s
 @app.get('/stores/{store_id}/review/{review_id}/delete')
 def review_delete(store_id: int, review_id: int):
     food_store = find_food_store_by_id(store_id)
-    find_review = find_review_by_id(review_id, store_id)
-    food_store['review_list'] = [review for review in food_store['review_list'] if review['review_id'] != find_review['review_id']]
+    food_store['review_list'] = [review for review in food_store['review_list'] if review['review_id'] != review_id]
     return RedirectResponse(f'/stores/{store_id}', status_code=303)
 
 def find_food_store_by_id(store_id: int):
