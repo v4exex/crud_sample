@@ -12,10 +12,12 @@ food_store_list = [
         'addr': '자동차시장1길 24-1',
         'review_list': [
             {
+                'review_id': 1,
                 'score': 3,
                 'comment': '좋지못했다'
             },
             {
+                'review_id': 2,
                 'score': 4,
                 'comment': '상당한 맛이었다'
             }
@@ -69,13 +71,50 @@ def review_new(request:Request, store_id: int):
     )    
 
 @app.post('/stores/{store_id}/review/create')
-def review_new(store_id: int, score: int = Form(), comment: str = Form()):
+def review_create(store_id: int, score: int = Form(), comment: str = Form()):
     food_store = find_food_store_by_id(store_id)
     food_store['review_list'].append({
+        'review_id': get_new_review_id(food_store['review_list']),
         'score': score,
         'comment': comment,
     })
     return RedirectResponse(f'/stores/{store_id}', status_code=303)
 
+@app.get('/stores/{store_id}/review/{review_id}/edit')
+def review_edit(request:Request, store_id: int, review_id: int):
+    food_store = find_food_store_by_id(store_id)
+    review = find_review_by_id(review_id, food_store['review_list'])
+    
+    return templates.TemplateResponse(
+        request=request,
+        name='review_edit.html',
+        context={
+            'store_id': store_id, 
+            'review_id': review_id,
+            'review': review,
+        }
+    )  
+
+@app.post('/stores/{store_id}/review/{review_id}/update')
+def review_update(store_id: int, review_id: int, score: int = Form(), comment: str = Form()):
+    food_store = find_food_store_by_id(store_id)
+    review = find_review_by_id(review_id, food_store['review_list'])
+    review['score'] = score
+    review['comment'] = comment
+    return RedirectResponse(f'/stores/{store_id}', status_code=303)
+
+@app.get('/stores/{store_id}/review/{review_id}/delete')
+def review_delete(store_id: int, review_id: int):
+    food_store = find_food_store_by_id(store_id)
+    find_review = find_review_by_id(review_id, food_store['review_list'])
+    food_store['review_list'] = [review for review in food_store['review_list'] if review['review_id'] != find_review['review_id']]
+    return RedirectResponse(f'/stores/{store_id}', status_code=303)
+
 def find_food_store_by_id(store_id: int):
     return next((food_store for food_store in food_store_list if food_store['id'] == store_id), None)
+
+def find_review_by_id(review_id: int, review_list: list):
+    return next((review for review in review_list if review['review_id'] == review_id), None)
+
+def get_new_review_id(review_list):
+    return max([review['review_id'] for review in review_list], default=0) + 1

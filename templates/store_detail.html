@@ -41,6 +41,24 @@
             max-width: 520px;
             margin: 0 auto;
         }
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 24px;
+            padding: 8px 14px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: var(--card);
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+        .back-btn:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            transform: translateX(-2px);
+        }
         .eyebrow {
             font-size: 13px;
             font-weight: 600;
@@ -196,10 +214,53 @@
             font-size: 15px;
             line-height: 1.6;
         }
+        .review-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--line);
+        }
+        .review-actions button,
+        .review-actions a {
+            display: inline-block;
+            text-decoration: none;
+            padding: 7px 14px;
+            border: none;
+            border-radius: 999px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .review-actions button:hover,
+        .review-actions a:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        .review-actions .btn-edit {
+            color: var(--accent);
+            background: linear-gradient(135deg, rgba(91, 91, 240, 0.16), rgba(168, 85, 247, 0.16));
+        }
+        .review-actions .btn-edit:hover {
+            background: linear-gradient(135deg, #5b5bf0, #a855f7);
+            box-shadow: 0 8px 20px -8px rgba(124, 77, 245, 0.7);
+        }
+        .review-actions .btn-delete {
+            color: #f43f5e;
+            background: linear-gradient(135deg, rgba(244, 63, 94, 0.14), rgba(251, 146, 60, 0.16));
+        }
+        .review-actions .btn-delete:hover {
+            background: linear-gradient(135deg, #f43f5e, #fb923c);
+            box-shadow: 0 8px 20px -8px rgba(244, 63, 94, 0.7);
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <a class="back-btn" href="/stores">← 목록으로</a>
         <div class="eyebrow">RESTAURANT</div>
         <h1>{{ food_store.name }}</h1>
         <p class="addr">{{ food_store.addr }}</p>
@@ -233,6 +294,10 @@
                     <span>{{ review.score }}</span>
                 </div>
                 <p class="comment">{{ review.comment }}</p>
+                <div class="review-actions">
+                    <a class="btn-edit" href="/stores/{{ food_store.id }}/review/{{ review.review_id }}/edit">수정하기</a>
+                    <a class="btn-delete" href="/stores/{{ food_store.id }}/review/{{ review.review_id }}/delete">삭제하기</a>
+                </div>
             </div>
             {% else %}
             <div class="empty">
