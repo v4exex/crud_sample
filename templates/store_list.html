@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>음식점 리스트</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+    <style>
+        :root {
+            --bg: #fafafa;
+            --card: #ffffff;
+            --text: #111111;
+            --muted: #8b8b94;
+            --line: rgba(0, 0, 0, 0.06);
+            --accent: #5b5bf0;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0b0b0d;
+                --card: #151518;
+                --text: #f4f4f5;
+                --muted: #7c7c86;
+                --line: rgba(255, 255, 255, 0.08);
+                --accent: #8b8bff;
+            }
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 72px 20px;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Pretendard, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container {
+            max-width: 520px;
+            margin: 0 auto;
+        }
+        header { margin-bottom: 32px; }
+        .eyebrow {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin: 0;
+        }
+        .count {
+            margin-top: 8px;
+            font-size: 15px;
+            color: var(--muted);
+        }
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        li a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 22px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            color: inherit;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        li a::after {
+            content: "→";
+            color: var(--muted);
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+        li a:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px -12px rgba(91, 91, 240, 0.35);
+        }
+        li a:hover::after {
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+        .empty {
+            padding: 40px 0;
+            text-align: center;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="eyebrow">RESTAURANTS</div>
+            <h1>음식점 리스트</h1>
+            <div class="count">총 {{ food_store_list|length }}곳</div>
+        </header>
+        <ul>
+            {% for food_store in food_store_list %}
+            <li>
+                <a href="/stores/{{ food_store.id }}">{{ food_store.name }}</a>
+            </li>
+            {% else %}
+            <li class="empty">등록된 음식점이 없습니다.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

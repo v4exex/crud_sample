@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>음식점 상세정보</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+    <style>
+        :root {
+            --bg: #fafafa;
+            --card: #ffffff;
+            --text: #111111;
+            --muted: #8b8b94;
+            --line: rgba(0, 0, 0, 0.06);
+            --accent: #5b5bf0;
+            --accent-soft: rgba(91, 91, 240, 0.1);
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0b0b0d;
+                --card: #151518;
+                --text: #f4f4f5;
+                --muted: #7c7c86;
+                --line: rgba(255, 255, 255, 0.08);
+                --accent: #8b8bff;
+                --accent-soft: rgba(139, 139, 255, 0.15);
+            }
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 72px 20px;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Pretendard, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container {
+            max-width: 520px;
+            margin: 0 auto;
+        }
+        .eyebrow {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin: 0 0 8px;
+        }
+        .addr {
+            margin: 0 0 28px;
+            font-size: 15px;
+            color: var(--muted);
+        }
+        .stats {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+        .stat {
+            flex: 1;
+            padding: 18px 20px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+        }
+        .stat .label {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+        .stat .value {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+        .stat .value.accent { color: var(--accent); }
+        h2 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin: 0;
+        }
+        .section-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+        .write-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 16px;
+            border-radius: 999px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 6px 18px -8px var(--accent);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .write-btn::before { content: "+"; font-size: 16px; line-height: 1; }
+        .write-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px -8px var(--accent);
+        }
+        .reviews {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .review {
+            padding: 18px 20px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+        }
+        .score {
+            display: inline-block;
+            padding: 4px 10px;
+            margin-bottom: 10px;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .comment {
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="eyebrow">RESTAURANT</div>
+        <h1>{{ food_store.name }}</h1>
+        <p class="addr">{{ food_store.addr }}</p>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="label">리뷰점수</div>
+                <div class="value accent">{{ avg_score }}</div>
+            </div>
+            <div class="stat">
+                <div class="label">리뷰개수</div>
+                <div class="value">{{ review_count }}</div>
+            </div>
+        </div>
+
+        <div class="section-head">
+            <h2>사용자리뷰</h2>
+            <a class="write-btn" href="/stores/{{ food_store.id }}/reviews/new">리뷰쓰기</a>
+        </div>
+        <div class="reviews">
+            {% for review in food_store.review_list %}
+            <div class="review">
+                <span class="score">평점 {{ review.score }}</span>
+                <p class="comment">{{ review.comment }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
