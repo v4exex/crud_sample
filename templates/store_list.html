@@ -17,6 +17,8 @@
             --a1: #7c5cff;
             --a2: #ff5ca8;
             --a3: #22d3ee;
+            --gold: #ffc94d;
+            --star-off: rgba(255, 255, 255, 0.14);
             --grad: linear-gradient(135deg, var(--a1), var(--a2));
             --orb: 0.5;
         }
@@ -28,6 +30,7 @@
                 --glass: rgba(255, 255, 255, 0.65);
                 --glass-hi: rgba(255, 255, 255, 0.95);
                 --line: rgba(20, 18, 31, 0.08);
+                --star-off: rgba(20, 18, 31, 0.12);
                 --orb: 0.32;
             }
         }
@@ -168,11 +171,42 @@
             color: #fff;
             transform: rotate(-45deg);
         }
-        .reviews {
+        .info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
+        }
+        .meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--muted);
         }
+        .stars-partial {
+            display: inline-block;
+            font-size: 14px;
+            line-height: 1;
+            white-space: nowrap;
+        }
+        .star {
+            position: relative;
+            display: inline-block;
+            margin-right: 1px;
+            color: var(--star-off);
+        }
+        .star-fill {
+            position: absolute;
+            top: 0; left: 0;
+            overflow: hidden;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(255, 201, 77, 0.5);
+        }
+        .avg { font-weight: 800; color: var(--gold); }
+        .dot { opacity: 0.5; }
+        .no-review { font-weight: 500; opacity: 0.8; }
         li.empty {
             padding: 56px 20px;
             text-align: center;
@@ -194,8 +228,25 @@
             {% for food_store in food_store_list %}
             <li>
                 <a href="/stores/{{ food_store.store_id }}">
-                    <span>{{ food_store.name }}</span>
-                    <span class="reviews">리뷰 {{ review_counts.get(food_store.store_id, 0) }}</span>
+                    <div class="info">
+                        <span>{{ food_store.name }}</span>
+                        <div class="meta">
+                            {% if food_store.review_count %}
+                            {% set score = food_store.avg_score|float %}
+                            <span class="stars-partial">
+                                {% for i in range(5) %}
+                                {% set fill = [[score - i, 0]|max, 1]|min * 100 %}
+                                <span class="star">★<span class="star-fill" style="width: {{ fill }}%;">★</span></span>
+                                {% endfor %}
+                            </span>
+                            <span class="avg">{{ '%.1f'|format(score) }}</span>
+                            <span class="dot">·</span>
+                            <span>리뷰 {{ food_store.review_count }}</span>
+                            {% else %}
+                            <span class="no-review">아직 리뷰가 없어요</span>
+                            {% endif %}
+                        </div>
+                    </div>
                 </a>
             </li>
             {% else %}

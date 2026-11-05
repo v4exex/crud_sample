@@ -32,13 +32,20 @@ templates = Jinja2Templates(directory='templates')
 @app.get('/stores')
 def store_list(request:Request):
     with Session(engine) as db:
-        food_store_list = db.scalars(select(Store)).all()
-        review_counts = dict(db.execute(select(Review.store_id, func.count()).group_by(Review.store_id)).all())
+        food_store_list = db.execute(
+            select(
+                Store.store_id, Store.name, Store.addr,
+                func.count(Review.review_id).label('review_count'),
+                func.coalesce(func.round(func.avg(Review.score), 1), 0).label('avg_score'),
+            )
+            .outerjoin(Review, Review.store_id == Store.store_id)
+            .group_by(Store.store_id)
+        ).all()
 
         return templates.TemplateResponse(
             request=request,
             name='store_list.html',
-            context={ 'food_store_list': food_store_list, 'review_counts': review_counts }
+            context={ 'food_store_list': food_store_list }
         )
 
 @app.get('/stores/{store_id}')
