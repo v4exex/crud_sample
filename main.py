@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 
-from sqlalchemy import create_engine, select, func
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session
 
 DB_URL = 'postgresql+psycopg://sd4:sd4@localhost:5432/board'
@@ -33,9 +33,11 @@ templates = Jinja2Templates(directory='templates')
 def store_list(request:Request):
     with Session(engine) as db:
         food_store_list = db.scalars(select(Store)).all()
-        review_counts = dict(db.execute(
-            select(Review.store_id, func.count()).group_by(Review.store_id)
-        ).all())
+
+        review_counts = {}
+        for food_store in food_store_list:
+            review_list = db.scalars(select(Review).where(Review.store_id == food_store.store_id)).all()
+            review_counts[food_store.store_id] = len(review_list)
 
         return templates.TemplateResponse(
             request=request,
