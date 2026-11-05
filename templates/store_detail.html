@@ -345,10 +345,10 @@
 
         <div class="section-head">
             <h2>사용자리뷰</h2>
-            <a class="write-btn" href="/stores/{{ food_store.id }}/review/new">리뷰쓰기</a>
+            <a class="write-btn" href="/stores/{{ food_store.store_id }}/review/new">리뷰쓰기</a>
         </div>
         <div class="reviews">
-            {% for review in food_store.review_list %}
+            {% for review in review_list %}
             <div class="review">
                 <div class="score">
                     <span class="stars">{% for i in range(5) %}<span class="{{ 'on' if i < review.score else '' }}">★</span>{% endfor %}</span>
@@ -356,8 +356,8 @@
                 </div>
                 <p class="comment">{{ review.comment }}</p>
                 <div class="review-actions">
-                    <a class="btn-edit" href="/stores/{{ food_store.id }}/review/{{ review.review_id }}/edit">수정하기</a>
-                    <a class="btn-delete" href="/stores/{{ food_store.id }}/review/{{ review.review_id }}/delete">삭제하기</a>
+                    <a class="btn-edit" href="/stores/{{ food_store.store_id }}/review/{{ review.review_id }}/edit">수정하기</a>
+                    <a class="btn-delete" href="/stores/{{ food_store.store_id }}/review/{{ review.review_id }}/delete">삭제하기</a>
                 </div>
             </div>
             {% else %}

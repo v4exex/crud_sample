@@ -168,6 +168,11 @@
             color: #fff;
             transform: rotate(-45deg);
         }
+        .reviews {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--muted);
+        }
         li.empty {
             padding: 56px 20px;
             text-align: center;
@@ -188,7 +193,10 @@
         <ul>
             {% for food_store in food_store_list %}
             <li>
-                <a href="/stores/{{ food_store.id }}">{{ food_store.name }}</a>
+                <a href="/stores/{{ food_store.store_id }}">
+                    <span>{{ food_store.name }}</span>
+                    <span class="reviews">리뷰 {{ review_counts.get(food_store.store_id, 0) }}</span>
+                </a>
             </li>
             {% else %}
             <li class="empty">등록된 음식점이 없습니다.</li>
