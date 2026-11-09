@@ -249,6 +249,17 @@
             color: var(--gold);
         }
         .score .stars { font-size: 18px; }
+        .score .created-at {
+            margin-left: auto;
+            padding: 4px 10px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: var(--glass);
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
         .comment {
             margin: 0;
             font-size: 16px;
@@ -353,11 +364,14 @@
                 <div class="score">
                     <span class="stars">{% for i in range(5) %}<span class="{{ 'on' if i < review.score else '' }}">★</span>{% endfor %}</span>
                     <span>{{ review.score }}</span>
+                    <time class="created-at" datetime="{{ review.created_at.isoformat() }}">{{ review.created_at.strftime('%Y.%m.%d %H:%M:%S') }}</time>
                 </div>
                 <p class="comment">{{ review.comment }}</p>
                 <div class="review-actions">
                     <a class="btn-edit" href="/stores/{{ food_store.store_id }}/review/{{ review.review_id }}/edit">수정하기</a>
-                    <a class="btn-delete" href="/stores/{{ food_store.store_id }}/review/{{ review.review_id }}/delete">삭제하기</a>
+                    <form action="/stores/{{ food_store.store_id }}/review/{{ review.review_id }}/delete" method="post">
+                        <button type="submit" class="btn-delete">삭제하기</button>
+                    </form>
                 </div>
             </div>
             {% else %}
